@@ -1,0 +1,152 @@
+.items-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  .filters {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input, select {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: all 0.3s;
+
+      &:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+      }
+    }
+
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+
+    .search-button, button:first-of-type {
+      background: #4CAF50;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: #45a049;
+      }
+    }
+
+    .reset-button, button:last-of-type {
+      background: #f44336;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: #da190b;
+      }
+    }
+  }
+
+  .backend-filters {
+    background: #16171d;
+    border-left: 3px solid #484d48;
+  }
+
+  .frontend-filters {
+    background: #e3f2fd;
+    border-left: 3px solid #163246;
+  }
+
+  .reset-all {
+    padding: 8px 16px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #da190b;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  .count {
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f5f5f5;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+  }
+
+  .loading, .error, .empty {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+
+  .error {
+    color: #f44336;
+  }
+}

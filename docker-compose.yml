@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_app
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app_network
+    env_file:
+      - .env
+
+  database:
+    image: postgres:15-alpine
+    container_name: ${COMPOSE_PROJECT_NAME}_database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  backend:
+    image: php:8.4-fpm
+    container_name: php_symfony
+    working_dir: /var/www/html
+    build:
+      context: docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=1
+      - PQ_DB=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}?serverVersion=15&charset=utf8
+    networks:
+      - app_network
+    env_file:
+      - .env
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "8081:8080"
+    networks:
+      - app_network
+    environment:
+      - ADMINER_DEFAULT_SERVER=database
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: app_frontend
+    environment:
+      VITE_API_URL: /api
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - app_network
+    restart: unless-stopped
+
+volumes:
+  database_data:
+    name: ${COMPOSE_PROJECT_NAME}_database_data
+
+networks:
+  app_network:
+    name: ${COMPOSE_PROJECT_NAME}_network
+    driver: bridge
