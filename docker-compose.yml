@@ -73,7 +73,7 @@ services:
       dockerfile: Dockerfile
     container_name: app_frontend
     environment:
-      VITE_API_URL: /api
+      VITE_API_URL: ${VITE_API_URL}
     volumes:
       - ./frontend:/app
       - /app/node_modules
